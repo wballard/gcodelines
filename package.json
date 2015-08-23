@@ -1,0 +1,14 @@
+{
+  "name": "gcodelines",
+  "version": "1.0.0",
+  "description": "Utility functions to render different kinds of lines with gcode",
+  "main": "lines.litcoffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Will Ballard <wballard@mailframe.net>",
+  "license": "ISC",
+  "dependencies": {
+    "coffee-script": "^1.9.3"
+  }
+}
