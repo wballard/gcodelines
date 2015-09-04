@@ -23,6 +23,7 @@
     _ = require 'lodash'
     options = docopt doc
     circle = require './circle.litcoffee'
+    pocket = require './pocket.litcoffee'
     {SAFE_TRAVEL, line, boundLineData, followupLine, rectangle} = require './lines.litcoffee'
 
 Thickness with a slight overstep making sure we cut all the way through.
@@ -55,11 +56,11 @@ Each zone is 1/5 total width, with air ports and channels cut.
 Carve out a half depth channel, inset a bit to make sure there is an edge to
 seal for vacuum.
 
-      #console.log pocket zoneCenter - zoneWidth/4, channelInset, zoneWidth/2, length - 2*channelInset, thickness / -2.0, cutterDiameter
+      console.log pocket zoneCenter - zoneWidth/4, channelInset, zoneWidth/2, length - 2*channelInset, thickness / -2.0, cutterDiameter
 
 Carve out an air port.
 
-      console.log circle zoneCenter, airPortInset, zoneWidth/2, thickness, cutterDiameter
+      console.log circle zoneCenter, airPortInset, airportDiameter, thickness, cutterDiameter
 
 
       zoneCenter += zoneWidth
