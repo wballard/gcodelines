@@ -9,7 +9,7 @@
     Generates a vacuum table plenum board to cut from a 4x8x3/4 MDF sheet. This
     assumes the 4' edge is the width/X and the 8' edge is the length/Y.
 
-    This will divide the 1200mm effective width into 5 longitudinal zones
+    This will divide the 1200mm effective width into 6 longitudinal zones
     each with an air port completely through the panel, and a air channel to
     distribute vacuum from the port.
 
@@ -28,6 +28,7 @@
 
 Thickness with a slight overstep making sure we cut all the way through.
 
+    zones = 6
     thickness = 19.05 + 1
     width = 1220.0
     length = Number(options['<length-mm>'])
@@ -47,9 +48,10 @@ Prefix. Set up the spindle.
 
     """
 
-Each zone is 1/5 total width, with air ports and channels cut.
+Each zone, with air ports and channels cut.
 
-    zoneWidth = width / 5.0
+    zoneWidth = width / zones
+    console.error 'Zone Width:', "#{zoneWidth}"
     zoneCenter = zoneWidth / 2.0
     while zoneCenter < width
 
@@ -60,8 +62,7 @@ seal for vacuum.
 
 Carve out an air port.
 
-      console.log circle zoneCenter, airPortInset, airportDiameter, thickness, cutterDiameter
-
+      console.log circle zoneCenter, length - airPortInset, airportDiameter, thickness, cutterDiameter
 
       zoneCenter += zoneWidth
 
