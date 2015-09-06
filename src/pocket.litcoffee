@@ -22,7 +22,7 @@ Depth iteration loop. Take a bite at a time.
         ret += """
         G0X#{x+cutterDiameter/2.0}Y#{y+cutterDiameter/2.0}
         G1F1000Z#{atDepth}
-        
+
         """
 
 This is the main loop, make a pocketing 'spiral', moving in toward the X
