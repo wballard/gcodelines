@@ -1,11 +1,12 @@
 Run the cutter this high during moves.
 
-    SAFE_TRAVEL = 10.0
-
+    SAFE_TRAVEL = 30.0
     intersect = require 'wgs84-intersect-util'
 
 
-Bound a line to a box.
+Bound a line to a box. This clips any x or y that would be out of bounds to instead
+be on the boundary.
+- bounds: (x,y,width,height) style rectangle
 
     boundLineData = (x1, y1, x2, y2, bounds) ->
       if bounds
@@ -40,100 +41,32 @@ Bound a line to a box.
           y2: undefined
         }
 
+Standard program suffix, safe and shutdown.
 
-Core line rendering function.
-
-    coreLine = (x1, y1, x2, y2, depth, dedupe, bounds, render) ->
-      {x1, y1, x2, y2} = boundLineData x1, y1, x2, y2, bounds
-      if dedupe["#{x1},#{y1},#{x2},#{y2}"] or dedupe["#{x2},#{y2},#{x1},#{y1}"]
-        return ""
-      else
-        if x1? and y1? and x2? and y2?
-          return render x1, y1, x2, y2, depth
-        else
-          ""
-
-Cut a line with gcode. This will make multiple passes. A dedupe hash can help
-you avoid multiple of the same line depending on your source program.
-Cuts take the form:
- - assumes tabletop is Z0
- - make sure the cutter is safe height
- - move to the target
- - make multiple passes ramping in 1/4 depth each cut
- - the trailing blank line separates the cut blocks
- - this takes a bounding box to clip
-
-    line = (x1, y1, x2, y2, depth, dedupe={}, bounds) ->
-      coreLine x1, y1, x2, y2, depth, dedupe, bounds, (x1, y1, x2, y2, depth) ->
-        """
-        G0Z#{depth+SAFE_TRAVEL}
-        G0X#{x1}Y#{y1}
-        G1F4000Z#{depth-1}
-        G1F4000X#{x2}Y#{y2}Z#{depth-1}
-        G1F4000X#{x1}Y#{y1}Z#{3*depth/4}
-        G1F4000X#{x2}Y#{y2}Z#{3*depth/4}
-        G1F4000X#{x1}Y#{y1}Z#{depth/2}
-        G1F4000X#{x2}Y#{y2}Z#{depth/2}
-        G1F4000X#{x1}Y#{y1}Z#{depth/4}
-        G1F4000X#{x2}Y#{y2}Z#{depth/4}
-        G1F4000X#{x1}Y#{y1}Z#{0}
-        G1F4000X#{x2}Y#{y2}Z#{0}
-        G0Z#{depth+SAFE_TRAVEL}
-
-        """
-
-
-A followup line, this will make a second pass to clean up any splinters. I hope.
-Similar to `line` this has an optional dedupe hash.
-Cuts take the form:
- - assumes tabletop is Z0
- - make sure the cutter is safe height
- - move to the target
- - make a single pass at full depth
- - the trailing blank line separates the cut blocks
-
-    followupLine = (x1, y1, x2, y2, depth, dedupe={}, bounds) ->
-      coreLine x1, y1, x2, y2, depth, dedupe, bounds, (x1, y1, x2, y2, depth) ->
-        """"
-        G0Z#{depth+SAFE_TRAVEL}
-        G0X#{x1}Y#{y1}
-        G1F4000Z#{0}
-        G1F4000X#{x2}Y#{y2}Z#{0}
-        G1F4000X#{x1}Y#{y1}Z#{0}
-        G0Z#{depth+SAFE_TRAVEL}
-
-        """
-
-
-Everyone's favorite shape! The rectangle, so much more than merely a square...
-- assumes tabletop is Z0
-- make sure the cutter is safe height
-- move to the target
-- make multiple passes stepping in 1/4 depth each cut
-- the trailing blank line separates the cut blocks
-
-    rectangle = (x, y, width, height, depth) ->
-      ret = """
-      G0Z#{depth+SAFE_TRAVEL}
-      G0X#{x}Y#{y}
+    suffix = ->
       """
-      [depth-1, 3*(depth/4), depth/2, depth/4, 0].forEach (z) ->
-        ret += """
-          G1F4000X#{x}Y#{y}Z#{z}
-          G1F4000X#{x+width}Y#{y}Z#{z}
-          G1F4000X#{x+width}Y#{y+height}Z#{z}
-          G1F4000X#{x}Y#{y+height}Z#{z}
-          G1F4000X#{x}Y#{y}Z#{z}
-        """
-      ret += """
-        G0Z#{depth+SAFE_TRAVEL}
+      G0Z#{SAFE_TRAVEL}
+      M5
+      G0X0Y0
+      M30
+      """
+
+
+Standard program prefix -- safe and power up.
+
+    prefix = (cutterDiameter, speed)->
+      speed = speed or 24000
+      """
+      (Cutter: #{cutterDiameter}mm)
+      G0Z#{SAFE_TRAVEL}
+      M3S#{speed}
+      G04P#{speed/500}
+      G0X0Y0
 
       """
-      ret
 
     module.exports =
-      line: line
       boundLineData: boundLineData
-      followupLine: followupLine
-      rectangle: rectangle
+      suffix: suffix
+      prefix: prefix
       SAFE_TRAVEL: SAFE_TRAVEL

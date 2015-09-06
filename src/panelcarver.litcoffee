@@ -30,7 +30,7 @@
 Prefix. Set up the spindle.
 
     console.log """
-    G0Z#{thickness+SAFE_TRAVEL}
+    G0Z#{SAFE_TRAVEL}
     M3S24000
     G04P10
     G0X0Y0
@@ -72,7 +72,7 @@ And now cut out the entire edge of the panel.
 Suffix
 
     console.log """
-    G0Z#{thickness+SAFE_TRAVEL}
+    G0Z#{SAFE_TRAVEL}
     M5
     G0X0Y0
     M30

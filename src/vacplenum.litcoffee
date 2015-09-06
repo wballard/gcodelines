@@ -22,9 +22,9 @@
     require 'colors'
     _ = require 'lodash'
     options = docopt doc
-    circle = require './circle.litcoffee'
+    plunge = require './plunge.litcoffee'
     pocket = require './pocket.litcoffee'
-    {SAFE_TRAVEL, line, boundLineData, followupLine, rectangle} = require './lines.litcoffee'
+    {prefix, suffix} = require './lines.litcoffee'
 
 Thickness with a slight overstep making sure we cut all the way through.
 
@@ -38,40 +38,30 @@ Thickness with a slight overstep making sure we cut all the way through.
 
 Prefix. Set up the spindle.
 
-    console.log """
-    (Cutter: #{cutterDiameter}mm)
-    G0Z#{thickness+SAFE_TRAVEL}
-    M3S24000
-    G04P10
-    G0X0Y0
-
-    """
+    console.log prefix(cutterDiameter)
 
 Each zone, with air ports and channels cut.
 
     zoneWidth = width / zones
-    console.error 'Zone Width:', "#{zoneWidth}"
     zoneCenter = zoneWidth / 2.0
     while zoneCenter < width
 
 Carve out a half depth channel, inset a bit to make sure there is an edge to
 seal for vacuum.
 
-      console.log pocket zoneCenter - zoneWidth/4, channelInset, zoneWidth/2, length - 2*channelInset, thickness / -2.0, cutterDiameter
+      console.log pocket zoneCenter - zoneWidth/4, channelInset, zoneWidth/2, length - 2*channelInset, -1 * thickness / 2.0, 0, cutterDiameter, 4
 
 Carve out an air port.
 
-      console.log circle zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * thickness, cutterDiameter
+      console.log plunge zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * thickness, 0, cutterDiameter
 
       zoneCenter += zoneWidth
+
+      console.log suffix()
+      process.exit 0
 
 
 
 Suffix
 
-    console.log """
-    G0Z#{thickness+SAFE_TRAVEL}
-    M5
-    G0X0Y0
-    M30
-    """
+    console.log suffix()

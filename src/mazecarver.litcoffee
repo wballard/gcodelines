@@ -196,7 +196,7 @@ with a safe travel. This treats the machine tabletop as 0.
 
       render: (maze) ->
         ret = """
-        G0Z#{@thickness+SAFE_TRAVEL}
+        G0Z#{SAFE_TRAVEL}
         M3S12000
         G04P10
         G0X0Y0
@@ -225,7 +225,7 @@ And now -- the end.
 
         ret +=
         """
-        G0Z#{@thickness+SAFE_TRAVEL}
+        G0Z#{SAFE_TRAVEL}
         M5
         G0X0Y0
         M30

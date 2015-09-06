@@ -29,7 +29,9 @@
     _ = require 'lodash'
     options = docopt doc
     plunge = require './plunge.litcoffee'
-    {SAFE_TRAVEL, line, boundLineData, followupLine, rectangle} = require './lines.litcoffee'
+    rectangle = require './rectangle.litcoffee'
+    line = require './line.litcoffee'
+    {suffix, prefix} = require './lines.litcoffee'
 
 Thickness with a slight overstep making sure we cut all the way through.
 
@@ -44,14 +46,7 @@ Thickness with a slight overstep making sure we cut all the way through.
 
 Prefix. Set up the spindle.
 
-    console.log """
-    (Cutter: #{cutterDiameter}mm)
-    G0Z#{SAFE_TRAVEL}
-    M3S24000
-    G04P10
-    G0X0Y0
-
-    """
+    console.log prefix(cutterDiameter)
 
 Each zone, then work up the Y axis making tiles
 
@@ -68,60 +63,30 @@ with each cell subdivided to create a deep 3x3 and a shallow 9x9.
 
 The major grid.
 
-        console.log """
-        G0X#{zoneCenter-tileSize/2.0}Y#{atY}
-        G1F1000Z-#{thickness/2}
-        G1F4000Y#{atY+tileSize}
-        G1F40000X#{zoneCenter+tileSize/2.0}
-        G1F4000Y#{atY}
-        G1F40000X#{zoneCenter-tileSize/2.0}
-        G1F40000X#{zoneCenter-tileSize/2.0+tileSize/3.0}
-        G1F4000Y#{atY+tileSize}
-        G1F40000X#{zoneCenter-tileSize/2.0+2.0*tileSize/3.0}
-        G1F4000Y#{atY}
-        G0Z#{SAFE_TRAVEL}
-        G0X#{zoneCenter-tileSize/2.0}Y#{atY+tileSize/3.0}
-        G1F1000Z-#{thickness/2}
-        G1F40000X#{zoneCenter+tileSize/2.0}
-        G1F40000Y#{atY+2.0*tileSize/3.0}
-        G1F40000X#{zoneCenter-tileSize/2.0}
-        G0Z#{SAFE_TRAVEL}
-
-        """
+        console.log rectangle zoneCenter-tileSize/2.0, atY, tileSize, tileSize, -1 * thickness / 2.0, 0
+        [atY+tileSize/3.0, atY+2*tileSize/3.0].forEach (stepY) ->
+          console.log line zoneCenter-tileSize/2.0, stepY, zoneCenter+tileSize/2.0, stepY, -1 * thickness / 2.0, 0
+        [zoneCenter-tileSize/6.0, zoneCenter+tileSize/6.0].forEach (stepX) ->
+          console.log line stepX, atY, stepX, atY+tileSize, -1 * thickness / 2.0, 0
 
 The minor grid, crossing X and Y to bisect the 3x3 grid.
 
         [atY+tileSize/6.0, atY+3*tileSize/6.0, atY+5*tileSize/6.0].forEach (stepY) ->
-          console.log """
-            G0X#{zoneCenter-tileSize/2.0}Y#{stepY}
-            G1F1000Z-#{thickness/6}
-            G1F40000X#{zoneCenter+tileSize/2.0}
-            G0Z#{SAFE_TRAVEL}
-
-          """
+          console.log line zoneCenter-tileSize/2.0, stepY, zoneCenter+tileSize/2.0, stepY, -1 * thickness / 6.0, 0
         [zoneCenter-2*tileSize/6.0, zoneCenter, zoneCenter+2*tileSize/6.0].forEach (stepX) ->
-          console.log """
-            G0X#{stepX}Y#{atY}
-            G1F1000Z-#{thickness/6}
-            G1F40000Y#{atY+tileSize}
-            G0Z#{SAFE_TRAVEL}
-
-          """
+          console.log line stepX, atY, stepX, atY+tileSize, -1 * thickness / 6.0, 0
 
 The air hole.
 
-        console.log plunge zoneCenter, atY+tileSize/2, 9.0, -1*thickness, cutterDiameter
+        console.log plunge zoneCenter, atY+tileSize/2, 9.0, -1 * thickness, 0, cutterDiameter
 
 
         atY += tileSize + tileYSeparation
+        console.log suffix()
+        process.exit 0
 
       zoneCenter += zoneWidth
 
 Suffix
 
-    console.log """
-    G0Z#{SAFE_TRAVEL}
-    M5
-    G0X0Y0
-    M30
-    """
+    console.log suffix()
