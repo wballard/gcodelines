@@ -33,7 +33,6 @@ Thickness with a slight overstep making sure we cut all the way through.
     width = 1220.0
     length = Number(options['<length-mm>'])
     channelInset = 40.0
-    airPortInset = 200.0
     airportDiameter = Number(options['<air-port-diameter-mm>'])
     cutterDiameter = Number(options['<cutter-diameter>'])
 
@@ -62,7 +61,7 @@ seal for vacuum.
 
 Carve out an air port.
 
-      console.log circle zoneCenter, length - airPortInset, airportDiameter, thickness, cutterDiameter
+      console.log circle zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * thickness, cutterDiameter
 
       zoneCenter += zoneWidth
 

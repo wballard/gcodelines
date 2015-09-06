@@ -38,6 +38,7 @@ Thickness with a slight overstep making sure we cut all the way through.
     length = Number(options['<length-mm>'])
     tileSize = 140.0
     tileYSeparation = 10.0
+    channelInset = 40.0
 
 Prefix. Set up the spindle.
 
@@ -59,8 +60,8 @@ Each zone, then work up the Y axis making tiles
 Work up the Y axis until the tiles fill the space. Each tile is a 3x3 grid
 with each cell subdivided to create a deep 3x3 and a shallow 9x9.
 
-      atY = 0
-      while atY < length
+      atY = channelInset
+      while atY < length-2*channelInset
 
 The major grid.
 
@@ -85,7 +86,24 @@ The major grid.
 
         """
 
-The minor grid.
+The minor grid, crossing X and Y to bisect the 3x3 grid.
+
+        [atY+tileSize/6.0, atY+3*tileSize/6.0, atY+5*tileSize/6.0].forEach (stepY) ->
+          console.log """
+            G0X#{zoneCenter-tileSize/2.0}Y#{stepY}
+            G1F1000Z-#{thickness/6}
+            G1F40000X#{zoneCenter+tileSize/2.0}
+            G0Z#{thickness+SAFE_TRAVEL}
+
+          """
+        [zoneCenter-2*tileSize/6.0, zoneCenter, zoneCenter+2*tileSize/6.0].forEach (stepX) ->
+          console.log """
+            G0X#{stepX}Y#{atY}
+            G1F1000Z-#{thickness/6}
+            G1F40000Y#{atY+tileSize}
+            G0Z#{thickness+SAFE_TRAVEL}
+
+          """
 
 The air hole.
 
@@ -93,7 +111,7 @@ The air hole.
         G0X#{zoneCenter}Y#{atY+tileSize/2.0}
         G1F1000Z-#{thickness}
         G0Z#{thickness+SAFE_TRAVEL}
-        
+
         """
 
 
