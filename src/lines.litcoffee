@@ -60,7 +60,7 @@ Standard program prefix -- safe and power up.
       (Cutter: #{cutterDiameter}mm)
       G0Z#{SAFE_TRAVEL}
       M3S#{speed}
-      G04P#{speed/500}
+      G04P#{speed/2000}
       G0X0Y0
 
       """

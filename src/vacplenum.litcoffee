@@ -1,6 +1,6 @@
     doc = """
     Usage:
-      vacplenum <length-mm> <air-port-diameter-mm> <cutter-diameter>
+      vacplenum
 
     Options:
       -h --help                show this help message and exit
@@ -31,10 +31,10 @@ Thickness with a slight overstep making sure we cut all the way through.
     zones = 6
     thickness = 19.05 + 1
     width = 1220.0
-    length = Number(options['<length-mm>'])
+    length = 2020.0
     channelInset = 40.0
-    airportDiameter = Number(options['<air-port-diameter-mm>'])
-    cutterDiameter = Number(options['<cutter-diameter>'])
+    airportDiameter = 60.325
+    cutterDiameter = 31.75
 
 Prefix. Set up the spindle.
 
@@ -44,6 +44,7 @@ Each zone, with air ports and channels cut.
 
     zoneWidth = width / zones
     zoneCenter = zoneWidth / 2.0
+    zone = 1
     while zoneCenter < width
 
 Carve out a half depth channel, inset a bit to make sure there is an edge to
@@ -53,13 +54,11 @@ seal for vacuum.
 
 Carve out an air port.
 
-      console.log plunge zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * thickness, 0, cutterDiameter
+      console.log plunge zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * (thickness+2), 0, cutterDiameter
+      console.log "(end zone #{zone})"
 
       zoneCenter += zoneWidth
-
-      console.log suffix()
-      process.exit 0
-
+      zone += 1
 
 
 Suffix

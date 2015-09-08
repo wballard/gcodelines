@@ -31,6 +31,7 @@
     plunge = require './plunge.litcoffee'
     rectangle = require './rectangle.litcoffee'
     line = require './line.litcoffee'
+    pocket = require './pocket.litcoffee'
     {suffix, prefix} = require './lines.litcoffee'
 
 Thickness with a slight overstep making sure we cut all the way through.
@@ -43,16 +44,19 @@ Thickness with a slight overstep making sure we cut all the way through.
     tileYSeparation = 10.0
     channelInset = 40.0
     cutterDiameter = 6.35
+    trackWidth = 18.0
+    trackDepth = 12.25
 
 Prefix. Set up the spindle.
 
     console.log prefix(cutterDiameter)
 
-Each zone, then work up the Y axis making tiles
+Each zone, then work up the Y axis making tiles.
 
     zoneWidth = width / zones
     console.error 'Zone Width:', "#{zoneWidth}"
     zoneCenter = zoneWidth / 2.0
+    zone = 1
     while zoneCenter < width
 
 Work up the Y axis until the tiles fill the space. Each tile is a 3x3 grid
@@ -78,14 +82,22 @@ The minor grid, crossing X and Y to bisect the 3x3 grid.
 
 The air hole.
 
-        console.log plunge zoneCenter, atY+tileSize/2, 9.0, -1 * thickness, 0, cutterDiameter
-
+        console.log plunge zoneCenter, atY+tileSize/2, 10.0, -1 * (thickness+1), 0, cutterDiameter
 
         atY += tileSize + tileYSeparation
+
+End of each zone is separated by a t-track pocket, so don't cut it on the last one.
+
+      if zone < zones
+        console.log pocket zoneCenter + zoneWidth / 2 - trackWidth/2, 0, trackWidth, length, -1 * trackDepth, 0, cutterDiameter, 4
+
+
+      console.log "(end zone #{zone})"
+      zoneCenter += zoneWidth
+      zone += 1
+      if zone is 3
         console.log suffix()
         process.exit 0
-
-      zoneCenter += zoneWidth
 
 Suffix
 

@@ -15,7 +15,7 @@ Safe cutter travel.
 
 Depth iteration loop. Take a bite at a time.
 
-      atDepth = depth / 2.0
+      atDepth = depth / steps
       while atDepth >= depth
         atBite = 0
         ret += """
@@ -29,7 +29,6 @@ center until you cross the center point. Works as the cutter has some
 actual width.
 
         while (cutterDiameter/2.0+atBite) < width/2.0
-          console.error atBite, width
           ret += """
           G1F4000X#{x+atBite+cutterDiameter/2.0}Y#{y+atBite+cutterDiameter/2.0}
           G1F4000Y#{y-atBite+height-cutterDiameter/2.0}
@@ -44,7 +43,7 @@ actual width.
 
       ret += """
       G0Z#{SAFE_TRAVEL}
-
+      (end pocket #{x}, #{y}, #{width}, #{height}, #{depth})
       """
 
       ret
