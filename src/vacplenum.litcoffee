@@ -34,7 +34,7 @@ Thickness with a slight overstep making sure we cut all the way through.
     length = 2020.0
     channelInset = 40.0
     airportDiameter = 60.325
-    cutterDiameter = 31.75
+    cutterDiameter = 19
 
 Prefix. Set up the spindle.
 
@@ -50,12 +50,14 @@ Each zone, with air ports and channels cut.
 Carve out a half depth channel, inset a bit to make sure there is an edge to
 seal for vacuum.
 
-      console.log pocket zoneCenter - zoneWidth/4, channelInset, zoneWidth/2, length - 2*channelInset, -1 * thickness / 2.0, 0, cutterDiameter, 4
+      if zone is 6
+        console.log pocket zoneCenter - zoneWidth/4, channelInset, zoneWidth/2, length - 2*channelInset, -1 * thickness / 2.0, 0, cutterDiameter, 4
 
 Carve out an air port.
 
-      console.log plunge zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * (thickness+2), 0, cutterDiameter
-      console.log "(end zone #{zone})"
+      if zone is 6
+        console.log plunge zoneCenter, length - airportDiameter/2 - 2*channelInset, airportDiameter, -1 * (thickness+2), 0, cutterDiameter
+        console.log "(end zone #{zone})"
 
       zoneCenter += zoneWidth
       zone += 1

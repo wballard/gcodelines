@@ -30,11 +30,11 @@ actual width.
 
         while (cutterDiameter/2.0+atBite) < width/2.0
           ret += """
-          G1F4000X#{x+atBite+cutterDiameter/2.0}Y#{y+atBite+cutterDiameter/2.0}
-          G1F4000Y#{y-atBite+height-cutterDiameter/2.0}
-          G1F4000X#{x-atBite+width-cutterDiameter/2.0}
-          G1F4000Y#{y+atBite+cutterDiameter/2.0}
-          G1F4000X#{x+atBite+cutterDiameter/2.0}
+          G1F3000X#{x+atBite+cutterDiameter/2.0}Y#{y+atBite+cutterDiameter/2.0}
+          G1F3000Y#{y-atBite+height-cutterDiameter/2.0}
+          G1F3000X#{x-atBite+width-cutterDiameter/2.0}
+          G1F3000Y#{y+atBite+cutterDiameter/2.0}
+          G1F3000X#{x+atBite+cutterDiameter/2.0}
 
           """
           atBite += stepX
