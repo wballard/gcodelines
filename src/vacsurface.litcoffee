@@ -1,6 +1,6 @@
     doc = """
     Usage:
-      vacsurface <length-mm>
+      vacsurface
 
     Options:
       -h --help                show this help message and exit
@@ -39,13 +39,11 @@ Thickness with a slight overstep making sure we cut all the way through.
     zones = 6
     thickness = 19.05 + 1
     width = 1220.0
-    length = Number(options['<length-mm>'])
+    length = 2020.0
     tileSize = 140.0
     tileYSeparation = 10.0
     channelInset = 40.0
     cutterDiameter = 6.35
-    trackWidth = 18.0
-    trackDepth = 12.25
 
 Prefix. Set up the spindle.
 
@@ -89,15 +87,15 @@ The air hole.
 End of each zone is separated by a t-track pocket, so don't cut it on the last one.
 
       if zone < zones
-        console.log pocket zoneCenter + zoneWidth / 2 - trackWidth/2, 0, trackWidth, length, -1 * trackDepth, 0, cutterDiameter, 4
-
+        mountAt = 50.0
+        while mountAt < length
+          console.log plunge zoneCenter + zoneWidth / 2 - 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
+          console.log plunge zoneCenter + zoneWidth / 2 + 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
+          mountAt += 200.0
 
       console.log "(end zone #{zone})"
       zoneCenter += zoneWidth
       zone += 1
-      if zone is 3
-        console.log suffix()
-        process.exit 0
 
 Suffix
 
