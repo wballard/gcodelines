@@ -20,6 +20,7 @@ Depth iteration loop. Take a bite at a time.
         atBite = 0
         ret += """
         G0X#{x+cutterDiameter/2.0}Y#{y+cutterDiameter/2.0}
+        G0Z#{start}
         G1F1000Z#{atDepth}
 
         """

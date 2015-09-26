@@ -6,17 +6,13 @@
       -h --help                show this help message and exit
       --version                show version and exit
 
-
-    Generates a vacuum table surface board from a 4x8x3/4 MDF sheet. This
-    assumes the 4' edge is the width/X and the 8' edge is the length/Y.
-
-    This will divide the 1200mm effective width into 6 longitudinal zones
-    and provide room for 40mm t-rail slots for hold down.
+    Follow-up program to `vactrack`. This prepares drill through mounting holes
+    and dog bones for final rail installation.
 
     The top of the sheet is assumed to be Z0, effectively treating the tabletop
     as Z0 and cutting into it.
 
-    Run this with a 1.25" surfacing cutter.
+    Run this with a 1/4" cutter.
 
     """
 
@@ -36,9 +32,10 @@ Thickness with a slight overstep making sure we cut all the way through.
     thickness = 19.05 + 1
     width = 1220.0
     length = 2020.0
-    cutterDiameter = 31.75
+    cutterDiameter = 6.35
     trackWidth = 40.0
     trackDepth = 22.0
+    trackDrillInterval = 300.0
     startY = -15.0
 
 Prefix. Set up the spindle.
@@ -56,7 +53,21 @@ Each zone, then work up the Y axis making tiles.
 End of each zone is separated by a t-track pocket, so don't cut it on the last one.
 
       if zone < zones
-        console.log pocket zoneCenter + zoneWidth / 2 - trackWidth/2, startY, trackWidth, length - startY, -1 * trackDepth, 0, cutterDiameter, 4
+
+And drill holes all the way through to bolt up through the base board and into the
+aluminum rails.
+
+        mountAt = trackDrillInterval
+        while mountAt < length
+          console.log plunge zoneCenter + zoneWidth / 2 - 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
+          console.log plunge zoneCenter + zoneWidth / 2 + 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
+          mountAt += trackDrillInterval
+
+The end dogbone to flush mount aluminum rails in the surface.
+
+        console.log pocket zoneCenter + zoneWidth / 2 - trackWidth/2, length-30, trackWidth, 30, -1 * trackDepth, 0, cutterDiameter, 4
+        console.log plunge zoneCenter + zoneWidth / 2 - trackWidth/2, length, cutterDiameter, -1 * trackDepth, 0, cutterDiameter
+        console.log plunge zoneCenter + zoneWidth / 2 + trackWidth/2, length, cutterDiameter, -1 * trackDepth, 0, cutterDiameter
 
       console.log "(end zone #{zone})"
       zoneCenter += zoneWidth

@@ -13,10 +13,10 @@ Cuts take the form:
       G0Z#{SAFE_TRAVEL}
       G0X#{x1}Y#{y1}
       G0Z#{start}
-      G1F4000X#{x2}Y#{y2}Z#{depth/4}
-      G1F4000X#{x1}Y#{y1}Z#{depth/2}
-      G1F4000X#{x2}Y#{y2}Z#{3*depth/4}
-      G1F4000X#{x1}Y#{y1}Z#{depth}
+      G1F3000X#{x2}Y#{y2}Z#{depth/4}
+      G1F3000X#{x1}Y#{y1}Z#{depth/2}
+      G1F3000X#{x2}Y#{y2}Z#{3*depth/4}
+      G1F3000X#{x1}Y#{y1}Z#{depth}
       G0Z#{SAFE_TRAVEL}
 
       """

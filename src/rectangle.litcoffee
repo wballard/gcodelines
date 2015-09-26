@@ -15,15 +15,15 @@ Everyone's favorite shape! The rectangle, so much more than merely a square...
       """
       [depth/4, depth/2, 3*depth/4, depth].forEach (z) ->
         ret += """
-          G1F4000X#{x}Y#{y}
-          G1F4000X#{x+width}Y#{y}Z#{z}
-          G1F4000X#{x+width}Y#{y+height}Z#{z}
-          G1F4000X#{x}Y#{y+height}Z#{z}
-          G1F4000X#{x}Y#{y}Z#{z}
+          G1F3000X#{x}Y#{y}
+          G1F3000X#{x+width}Y#{y}Z#{z}
+          G1F3000X#{x+width}Y#{y+height}Z#{z}
+          G1F3000X#{x}Y#{y+height}Z#{z}
+          G1F3000X#{x}Y#{y}Z#{z}
 
         """
       ret += """
-        G1F4000X#{x+width}Y#{y}
+        G1F3000X#{x+width}Y#{y}
         G0Z#{SAFE_TRAVEL}
 
       """

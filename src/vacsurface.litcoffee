@@ -80,18 +80,9 @@ The minor grid, crossing X and Y to bisect the 3x3 grid.
 
 The air hole.
 
-        console.log plunge zoneCenter, atY+tileSize/2, 10.0, -1 * (thickness+1), 0, cutterDiameter
+        console.log plunge zoneCenter, atY+tileSize/2, 10.0, -1 * thickness, 0, cutterDiameter
 
         atY += tileSize + tileYSeparation
-
-End of each zone is separated by a t-track pocket, so don't cut it on the last one.
-
-      if zone < zones
-        mountAt = 50.0
-        while mountAt < length
-          console.log plunge zoneCenter + zoneWidth / 2 - 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
-          console.log plunge zoneCenter + zoneWidth / 2 + 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
-          mountAt += 200.0
 
       console.log "(end zone #{zone})"
       zoneCenter += zoneWidth
