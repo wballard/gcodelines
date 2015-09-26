@@ -2,7 +2,7 @@ Run the cutter back and forth to create a pocket.
 
     {SAFE_TRAVEL} = require './lines.litcoffee'
 
-    module.exports = (x, y, width, height, depth, start, cutterDiameter=1.0, steps=2.0) ->
+    module.exports = (x, y, width, height, depth, start, cutterDiameter=1.0, steps=2.0, outline=false) ->
       stepX = cutterDiameter / steps
       stepDepth = depth / steps
 
@@ -39,6 +39,8 @@ actual width.
 
           """
           atBite += stepX
+          if outline
+            break
 
         atDepth += stepDepth
 

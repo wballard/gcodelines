@@ -9,19 +9,16 @@ Run the cutter to produce a circle.
       G0Z#{SAFE_TRAVEL}
       G0X#{x}Y#{y}
       G0Z#{start}
-      G1F1000Z#{depth}
-      G0Z#{SAFE_TRAVEL}
-      G0Z#{start}
 
       """
       atDepth = start
-      while atDepth >= depth
+      while atDepth > depth
+        atDepth += step
         ret += """
         G1F1000Z#{atDepth}
         G0Z#{start}
 
         """
-        atDepth += step
 
 Multiple spirals as grbl has no P word to subdivide helix.
 
@@ -40,14 +37,14 @@ And a final arc at the bottom depth to finish off.
 
         ret +=   """
         G2F1000X#{x-diameter/2.0+cutterDiameter/2.0}Y#{y}I#{diameter/2.0-cutterDiameter/2.0}
-        G0Z#{SAFE_TRAVEL}
 
         """
 
 All done.
 
       ret += """
-      (end plunge #{x}, #{y}, #{depth})
+      G0Z#{SAFE_TRAVEL}
+      (end plunge #{x}, #{y}, #{depth}, #{steps})
 
       """
       ret

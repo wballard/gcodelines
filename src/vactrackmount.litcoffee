@@ -35,7 +35,6 @@ Thickness with a slight overstep making sure we cut all the way through.
     cutterDiameter = 6.35
     trackWidth = 40.0
     trackDepth = 22.0
-    trackDrillInterval = 300.0
     startY = -15.0
 
 Prefix. Set up the spindle.
@@ -57,17 +56,15 @@ End of each zone is separated by a t-track pocket, so don't cut it on the last o
 And drill holes all the way through to bolt up through the base board and into the
 aluminum rails.
 
-        mountAt = trackDrillInterval
-        while mountAt < length
-          console.log plunge zoneCenter + zoneWidth / 2 - 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
-          console.log plunge zoneCenter + zoneWidth / 2 + 10.0, mountAt, cutterDiameter, -1 * (thickness*2), 0, cutterDiameter
-          mountAt += trackDrillInterval
+        [200, 400, 800, 1000, 1400, 1600, 2000].forEach (mountAt) ->
+          console.log plunge zoneCenter + zoneWidth / 2 - 10.0, mountAt, cutterDiameter, -1 * (thickness*2+2), 0, cutterDiameter, 1
+          console.log plunge zoneCenter + zoneWidth / 2 + 10.0, mountAt, cutterDiameter, -1 * (thickness*2+2), 0, cutterDiameter, 1
 
 The end dogbone to flush mount aluminum rails in the surface.
 
-        console.log pocket zoneCenter + zoneWidth / 2 - trackWidth/2, length-30, trackWidth, 30, -1 * trackDepth, 0, cutterDiameter, 4
-        console.log plunge zoneCenter + zoneWidth / 2 - trackWidth/2, length, cutterDiameter, -1 * trackDepth, 0, cutterDiameter
-        console.log plunge zoneCenter + zoneWidth / 2 + trackWidth/2, length, cutterDiameter, -1 * trackDepth, 0, cutterDiameter
+        console.log pocket zoneCenter + zoneWidth / 2 - trackWidth/2, length-20, trackWidth, 25, -1 * trackDepth, 0, cutterDiameter, 4, true
+        console.log plunge zoneCenter + zoneWidth / 2 - trackWidth/2, length + 5, cutterDiameter, -1 * trackDepth, 0, cutterDiameter
+        console.log plunge zoneCenter + zoneWidth / 2 + trackWidth/2, length + 5, cutterDiameter, -1 * trackDepth, 0, cutterDiameter
 
       console.log "(end zone #{zone})"
       zoneCenter += zoneWidth
