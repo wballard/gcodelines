@@ -41,7 +41,7 @@ Thickness with a slight overstep making sure we cut all the way through.
     width = 1220.0
     length = 2020.0
     tileSize = 140.0
-    tileYSeparation = 10.0
+    tileYSeparation = 40.0
     channelInset = 40.0
     cutterDiameter = 6.35
 
@@ -80,7 +80,7 @@ The minor grid, crossing X and Y to bisect the 3x3 grid.
 
 The air hole.
 
-        console.log plunge zoneCenter, atY+tileSize/2, 10.0, -1 * thickness, 0, cutterDiameter
+        console.log plunge zoneCenter, atY+tileSize/2, 10.0, -1 * (thickness+2), 0, cutterDiameter
 
         atY += tileSize + tileYSeparation
 
