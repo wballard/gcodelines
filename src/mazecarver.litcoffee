@@ -176,17 +176,16 @@ with a safe travel. This treats the machine tabletop as 0.
 The cut action walks the path of the maze multiple times in order to generate
 a smooth multipass cut removing layers of material on each pass.
 
-        depth = @thickness
-        while depth >= 0
+        steps = 4
+        (@thickness + x*((0-@thickness)/steps) for x in [1..steps]).forEach (z) ->
           maze.path.forEach (segment) =>
             if segment.reversal
               ret += "G0Z#{SAFE_TRAVEL}\n"
               ret += "G0X#{segment.to.row * cellWidth + cellWidth / 2}Y#{segment.to.column * cellHeight + cellHeight / 2}\n"
             else
               ret += "G1F3000X#{segment.from.row * cellHeight + cellHeight / 2}Y#{segment.from.column * cellHeight + cellHeight / 2}\n"
-              ret += "G1F1000Z#{depth}\n"
+              ret += "G1F1000Z#{z}\n"
               ret += "G1F3000X#{segment.to.row * cellWidth + cellWidth / 2}Y#{segment.to.column * cellHeight + cellHeight / 2}\n"
-          depth -= @thickness / 4
 
 And now -- the end, outline in a rectangle>
 
