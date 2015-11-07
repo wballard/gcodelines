@@ -6,7 +6,7 @@
       -h --help                show this help message and exit
       --version                show version and exit
 
-    Generates the gcode to resurface a spoilboard. This will shave of .2mm.
+    Generates the gcode to resurface a spoilboard to 0.
     Assumes a 1.25"(31.75mm) cutter.
 
     This treats the tabletop as 0, makes it easier to cut through with sheets that
@@ -21,7 +21,7 @@
     require 'colors'
     _ = require 'lodash'
     options = docopt doc
-    {SAFE_TRAVEL, suffix } = require './lines.litcoffee'
+    {SAFE_TRAVEL, prefix, suffix } = require './lines.litcoffee'
 
     width = Number(options['<width-mm>'])
     height = Number(options['<height-mm>'])
@@ -29,13 +29,7 @@
 
 Prefix. Set up the spindle.
 
-    console.log """
-    G0Z#{SAFE_TRAVEL}
-    M3S24000
-    G04P10
-    G0X0Y0
-
-    """
+    console.log prefix()
 
 
 This is a simple matter of figuring the 'step' size based on the cutter width, 
@@ -43,6 +37,7 @@ stepping up the height axis, with a 50% overlap.
 
     step = cutterDiameter / 2
     at = 0
+    console.log "G1F1000Z0"
     while true
       console.log "G1F3000Y#{at}"
       console.log "G1F3000X#{width}"

@@ -23,8 +23,6 @@ edit the code and up-arrow to generate.
     and will be held out of the maze generation. These are in cell coordinates,
     not in mm.
 
-    This treats the tabletop as 0, makes it easier to cut through with sheets that
-    will warp a bit.
 
     """
 
@@ -32,7 +30,8 @@ edit the code and up-arrow to generate.
     require 'colors'
     _ = require 'lodash'
     options = docopt doc
-    {SAFE_TRAVEL, line, followupLine} = require './lines.litcoffee'
+    {suffix, prefix} = require './lines.litcoffee'
+    line = require './line.litcoffee'
 
 
 This actually feels like an OO problem to me. So -- classes! With attributes
@@ -102,13 +101,25 @@ Cuts take the form:
         if @neighbors.length
           ret = ""
           if not @links[@north]
-            ret += line lx, uy, rx, uy, depthmm, dedupe
+            next = line lx, uy, rx, uy, -depthmm, 0
+            if not dedupe[next]
+              ret += next
+              dedupe[next] = next
           if not @links[@east]
-            ret += line rx, uy, rx, ly, depthmm, dedupe
+            next = line rx, uy, rx, ly, -depthmm, 0
+            if not dedupe[next]
+              ret += next
+              dedupe[next] = next
           if not @links[@south]
-            ret += line lx, ly, rx, ly, depthmm, dedupe
+            next = line lx, ly, rx, ly, -depthmm, 0
+            if not dedupe[next]
+              ret += next
+              dedupe[next] = next
           if not @links[@west]
-            ret += line lx, ly, lx, uy, depthmm, dedupe
+            next = line lx, ly, lx, uy, -depthmm, 0
+            if not dedupe[next]
+              ret += next
+              dedupe[next] = next
           ret
         else
           ""
@@ -195,13 +206,7 @@ Rendering sets up the gcode pre and post blocks to start the spindle and program
 with a safe travel. This treats the machine tabletop as 0.
 
       render: (maze) ->
-        ret = """
-        G0Z#{SAFE_TRAVEL}
-        M3S12000
-        G04P10
-        G0X0Y0
-
-        """
+        ret = prefix(7, 18000)
 
 Here is the actual action, cutting out walls, leaving the path. This is unrolling
 the cells back and forth to speed up the cut by avoiding seeks.
@@ -211,25 +216,17 @@ the cells back and forth to speed up the cut by avoiding seeks.
         dedupe = {}
         chunked = _.chunk maze.cells, maze.width
         lineBuffer = ""
-        followupLineBuffer = ""
         chunked.forEach (chunk, index) =>
          if index % 2
            chunk.reverse()
          chunk.forEach (cell) =>
            lineBuffer += cell.cut mazeCuttableWidth / maze.width, mazeCuttableHeight / maze.height, @thickness, dedupe, line
-           followupLineBuffer += cell.cut mazeCuttableWidth / maze.width, mazeCuttableHeight / maze.height, @thickness, dedupe, followupLine
 
-        ret = ret + lineBuffer + followupLineBuffer
+        ret = ret + lineBuffer
 
 And now -- the end.
 
-        ret +=
-        """
-        G0Z#{SAFE_TRAVEL}
-        M5
-        G0X0Y0
-        M30
-        """
+        ret += suffix()
 
 
 Ahh, the mask, this sets up coordinate regions and tells you if a cell
