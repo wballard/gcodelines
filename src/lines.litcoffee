@@ -70,3 +70,6 @@ Standard program prefix -- safe and power up.
       suffix: suffix
       prefix: prefix
       SAFE_TRAVEL: SAFE_TRAVEL
+      RPM: 18000
+      FEEDRATE: 5000
+      PLUNGERATE: 1000

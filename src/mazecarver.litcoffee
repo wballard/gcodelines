@@ -3,7 +3,7 @@ edit the code and up-arrow to generate.
 
     doc = """
     Usage:
-      mazecarver <width-mm> <height-mm> <thickness-mm> <width-cells> <height-cells> [<mask>...]
+      mazecarver <width-mm> <height-mm> <depth-mm> <width-cells> <height-cells> [<mask>...]
 
     Options:
       -h --help                show this help message and exit
@@ -23,7 +23,7 @@ edit the code and up-arrow to generate.
     and will be held out of the maze generation. These are in cell coordinates,
     not in mm.
 
-    Tabletop is assumed to be 0, not the cut material.
+    Material top is Z0.
 
 
     """
@@ -32,7 +32,7 @@ edit the code and up-arrow to generate.
     require 'colors'
     _ = require 'lodash'
     options = docopt doc
-    {suffix, prefix, SAFE_TRAVEL} = require './lines.litcoffee'
+    {suffix, prefix, SAFE_TRAVEL, RPM, FEEDRATE, PLUNGERATE} = require './lines.litcoffee'
     rectangle = require './rectangle.litcoffee'
 
 
@@ -162,7 +162,7 @@ Generate gcode for the maze. Here are the rules:
 - Do not cut walls if cells are linked, this is a path to follow
 
     class MultipassRender
-      constructor: (@width, @height, @thickness=12.7, @mountholeoffset=10.0) ->
+      constructor: (@width, @height, @depth=12.7, @mountholeoffset=10.0) ->
 
 
 Rendering sets up the gcode pre and post blocks to start the spindle and program
@@ -171,25 +171,27 @@ with a safe travel. This treats the machine tabletop as 0.
       render: (maze) ->
         cellWidth = @width / maze.width
         cellHeight = @height / maze.height
-        ret = prefix('', 18000)
+        ret = prefix('', RPM)
 
 The cut action walks the path of the maze multiple times in order to generate
 a smooth multipass cut removing layers of material on each pass.
 
+There is a bit of path compression on the reversals, since the backtrack will
+tend to chain. But, a trick, just pop up the Z, and let the cutter move to
+the next real cut.
+
         steps = 4
-        (@thickness + x*((0-@thickness)/steps) for x in [1..steps]).forEach (z) ->
+        (-1 * i * ((@depth)/steps) for i in [1..steps]).forEach (z) ->
           maze.path.forEach (segment) =>
             if segment.reversal
               ret += "G0Z#{SAFE_TRAVEL}\n"
-              ret += "G0X#{segment.to.row * cellWidth + cellWidth / 2}Y#{segment.to.column * cellHeight + cellHeight / 2}\n"
             else
-              ret += "G1F3000X#{segment.from.row * cellHeight + cellHeight / 2}Y#{segment.from.column * cellHeight + cellHeight / 2}\n"
-              ret += "G1F1000Z#{z}\n"
-              ret += "G1F3000X#{segment.to.row * cellWidth + cellWidth / 2}Y#{segment.to.column * cellHeight + cellHeight / 2}\n"
+              ret += "G1F#{FEEDRATE}X#{segment.from.row * cellWidth + .66 * cellWidth}Y#{segment.from.column * cellHeight + .5 * cellHeight}\n"
+              ret += "G1F#{PLUNGERATE}Z#{z}\n"
+              ret += "G1F#{FEEDRATE}X#{segment.to.row * cellWidth + .66 * cellWidth}Y#{segment.to.column * cellHeight + .5 * cellHeight}\n"
 
 And now -- the end, outline in a rectangle>
 
-        ret += rectangle 0, 0, @width, @height, @thickness, 0
         ret += suffix()
 
 
@@ -226,4 +228,4 @@ And after all those classes are defined, running the actual program isn't
 all that eventful.
 
     maze = new Maze Number(options['<width-cells>']), Number(options['<height-cells>']), new Mask(options['<mask>'])
-    console.log new MultipassRender(Number(options['<width-mm>']), Number(options['<height-mm>']), Number(options['<thickness-mm>'])).render(maze)
+    console.log new MultipassRender(Number(options['<width-mm>']), Number(options['<height-mm>']), Number(options['<depth-mm>'])).render(maze)
