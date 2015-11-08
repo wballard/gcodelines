@@ -180,7 +180,7 @@ There is a bit of path compression on the reversals, since the backtrack will
 tend to chain. But, a trick, just pop up the Z, and let the cutter move to
 the next real cut.
 
-        steps = 4
+        steps = Math.ceil @depth / 3
         (-1 * i * ((@depth)/steps) for i in [1..steps]).forEach (z) ->
           maze.path.forEach (segment) =>
             if segment.reversal
