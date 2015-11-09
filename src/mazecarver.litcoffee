@@ -190,8 +190,6 @@ the next real cut.
               ret += "G1F#{PLUNGERATE}Z#{z}\n"
               ret += "G1F#{FEEDRATE}X#{segment.to.row * cellWidth + .66 * cellWidth}Y#{segment.to.column * cellHeight + .5 * cellHeight}\n"
 
-And now -- the end, outline in a rectangle>
-
         ret += suffix()
 
 
