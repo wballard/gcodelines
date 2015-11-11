@@ -6,17 +6,20 @@ Cuts take the form:
  - the trailing blank line separates the cut blocks
  - this takes a bounding box to clip
 
-    {SAFE_TRAVEL} = require './lines.litcoffee'
+    {SAFE_TRAVEL, FEEDRATE, PLUNGERATE} = require './lines.litcoffee'
 
-    module.exports = (x1, y1, x2, y2, depth, start) ->
-      """
+    module.exports = (x1, y1, x2, y2, zstart, zend, stepheight=3) ->
+      steps = Math.ceil Math.abs(zstart-zend)/stepheight
+      ret = """
       G0Z#{SAFE_TRAVEL}
       G0X#{x1}Y#{y1}
-      G0Z#{start}
-      G1F3000X#{x2}Y#{y2}Z#{depth/4}
-      G1F3000X#{x1}Y#{y1}Z#{depth/2}
-      G1F3000X#{x2}Y#{y2}Z#{3*depth/4}
-      G1F3000X#{x1}Y#{y1}Z#{depth}
-      G0Z#{SAFE_TRAVEL}
+      G0Z#{zstart}
 
       """
+      (zstart + s*((zend-zstart)/steps) for s in [1..steps]).forEach (z) ->
+        ret += """
+        G1F#{FEEDRATE}X#{x2}Y#{y2}Z#{z}
+        G1F#{FEEDRATE}X#{x1}Y#{y1}Z#{z}
+
+        """
+      ret += "G0Z#{SAFE_TRAVEL}\n"

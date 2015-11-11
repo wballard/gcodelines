@@ -6,13 +6,15 @@ Everyone's favorite shape! The rectangle, so much more than merely a square...
 
     {SAFE_TRAVEL} = require './lines.litcoffee'
 
-    module.exports = (x, y, width, height, zstart, zend, steps=4) ->
+    module.exports = (x, y, width, height, zstart, zend, stepheight=3) ->
+      steps = Math.ceil Math.abs(zstart-zend)/stepheight
       ret = """
       G0Z#{SAFE_TRAVEL}
       G0X#{x}Y#{y}
       G0Z#{zstart}
+
       """
-      (zstart + x*((zend-zstart)/steps) for x in [1..steps]).forEach (z) ->
+      (zstart + s*((zend-zstart)/steps) for s in [1..steps]).forEach (z) ->
         ret += """
           G1F3000X#{x}Y#{y}
           G1F3000X#{x+width}Y#{y}Z#{z}
@@ -21,8 +23,4 @@ Everyone's favorite shape! The rectangle, so much more than merely a square...
           G1F3000X#{x}Y#{y}Z#{z}
 
         """
-      ret += """
-        G0Z#{SAFE_TRAVEL}
-
-      """
-      ret
+      ret += "G0Z#{SAFE_TRAVEL}\n"

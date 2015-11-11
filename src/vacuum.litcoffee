@@ -6,8 +6,7 @@
       -h --help                show this help message and exit
       --version                show version and exit
 
-    Generates the gcode to resurface a spoilboard to 0.
-    Assumes a 1.25"(31.75mm) cutter.
+    Generates the gcode to vacuum sweep the table. Assumes no cutter.
 
     This treats the tabletop as 0, makes it easier to cut through with sheets that
     will warp a bit.
@@ -25,27 +24,25 @@
 
     width = Number(options['<width-mm>'])
     height = Number(options['<height-mm>'])
-    cutterDiameter = 31.75
+    vacuumSweep = 200
 
 Prefix. Set up the spindle.
-
-    console.log prefix()
 
 
 This is a simple matter of figuring the 'step' size based on the cutter width,
 stepping up the height axis, with a 50% overlap.
 
-    step = cutterDiameter / 2
+    step = vacuumSweep
     at = 0
     console.log "G1F#{PLUNGERATE}Z0"
     while true
-      console.log "G1F#{FEEDRATE}Y#{at}"
-      console.log "G1F#{FEEDRATE}X#{width}"
+      console.log "G0F#{FEEDRATE}Y#{at}"
+      console.log "G0F#{FEEDRATE}X#{width}"
       at += step
       if at > height
         break
-      console.log "G1F#{FEEDRATE}Y#{at}"
-      console.log "G1F#{FEEDRATE}X0"
+      console.log "G0F#{FEEDRATE}Y#{at}"
+      console.log "G0F#{FEEDRATE}X0"
       at += step
       if at > height
         break
@@ -53,4 +50,4 @@ stepping up the height axis, with a 50% overlap.
 
 Suffix
 
-    console.log suffix()
+    console.log "G0X0Y0\n"

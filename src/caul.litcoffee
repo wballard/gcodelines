@@ -1,19 +1,21 @@
     doc = """
     Usage:
-      resurface <width-mm> <height-mm>
+      caul <width-mm> <height-mm> <groove-depth-mm>
 
     Options:
       -h --help                show this help message and exit
       --version                show version and exit
 
-    Generates the gcode to resurface a spoilboard to 0.
+    Generates the gcode to create a caul with a groove. Ideally the groove is
+    deep enough to stand above your spoilboard and get a good grip on the
+    surface medium.
+
     Assumes a 1.25"(31.75mm) cutter.
 
-    This treats the tabletop as 0, makes it easier to cut through with sheets that
-    will warp a bit.
+    Assumes the top of the caul stock is 0.
 
     This will 'cut large', as the width and height represent the cutter motion,
-    not the diamater cut net the cutter diamater.
+    not the diamater cut net the cutter diamater, so watch your clamps.
 
     """
 
@@ -22,15 +24,16 @@
     _ = require 'lodash'
     options = docopt doc
     {suffix, prefix, SAFE_TRAVEL, RPM, FEEDRATE, PLUNGERATE} = require './lines.litcoffee'
+    line = require './line.litcoffee'
 
     width = Number(options['<width-mm>'])
     height = Number(options['<height-mm>'])
+    grovedepth = Number(options['<groove-depth-mm>'])
     cutterDiameter = 31.75
 
 Prefix. Set up the spindle.
 
     console.log prefix()
-
 
 This is a simple matter of figuring the 'step' size based on the cutter width,
 stepping up the height axis, with a 50% overlap.
@@ -49,6 +52,8 @@ stepping up the height axis, with a 50% overlap.
       at += step
       if at > height
         break
+
+    console.log line 0, height, width, height, grovedepth
 
 
 Suffix
