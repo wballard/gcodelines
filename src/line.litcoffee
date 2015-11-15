@@ -22,4 +22,5 @@ Cuts take the form:
         G1F#{FEEDRATE}X#{x1}Y#{y1}Z#{z}
 
         """
+      ret += "G1F#{FEEDRATE}X#{x2}Y#{y2}Z#{zend}\n"
       ret += "G0Z#{SAFE_TRAVEL}\n"
