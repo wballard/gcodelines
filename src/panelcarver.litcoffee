@@ -1,6 +1,6 @@
     doc = """
     Usage:
-      panel <width-mm> <height-mm> <thickness-mm> <short-side-cells>
+      panel <width-mm> <height-mm> <thickness-mm> <width-cells>
 
     Options:
       -h --help                show this help message and exit
@@ -22,20 +22,16 @@
     require 'colors'
     _ = require 'lodash'
     options = docopt doc
-    {SAFE_TRAVEL, line, boundLineData, followupLine, rectangle} = require './lines.litcoffee'
+    {suffix, prefix, SAFE_TRAVEL, RPM, FEEDRATE, PLUNGERATE, boundLineData} = require './lines.litcoffee'
+    line = require './line.litcoffee'
+    rectangle = require './rectangle.litcoffee'
 
     thickness = Number(options['<thickness-mm>'])
-    step = Math.min(Number(options['<width-mm>']), Number(options['<height-mm>'])) / Number(options['<short-side-cells>'])
+    step = Math.max(Number(options['<width-mm>']), Number(options['<height-mm>'])) / Number(options['<width-cells>'])
 
 Prefix. Set up the spindle.
 
-    console.log """
-    G0Z#{SAFE_TRAVEL}
-    M3S24000
-    G04P10
-    G0X0Y0
-
-    """
+    console.log prefix('', RPM)
 
 
 This is a simple matter of figuring the 'step' size based on the cells, then
@@ -54,26 +50,15 @@ for the cross cut lines are such that the panel will not fall apart.
       xSlope = if x2 - x1 > 0 then 1 else -1
       ySlope = if y2 - y1 > 0 then 1 else -1
       chunks = Math.abs(Math.floor((x2 - x1) / step))
-      if chunks > 2
-        #step along each chunk and make a segment
-        _.range(0, chunks).forEach (chunk) ->
-          if Math.random() < 0.5
-            console.log line(x1 + chunk*step*xSlope, y1 + chunk*step*ySlope, x1 + (1+chunk)*step*xSlope, y1 + (1+chunk)*step*ySlope, thickness)
-      else
-        console.log line(x1, y1, x2, y2, thickness)
+      if chunks > 3
+        skip = _.random 1, chunks-2
+        console.log line(x1, y1, x1 + skip*step*xSlope, y1 + skip*step*ySlope, 0, -1*thickness)
+        console.log line(x1 + (skip+1)*step*xSlope, y1 + (skip+1)*step*ySlope, x2, y2, 0, -1*thickness)
+      else if x1 and x2 and y1 and y2
+        console.log line x1, y1, x2, y2, 0, -1*thickness
       at += step
-
-
-And now cut out the entire edge of the panel.
-
-    console.log rectangle(0, 0, Number(options['<width-mm>']), Number(options['<height-mm>']), thickness)
 
 
 Suffix
 
-    console.log """
-    G0Z#{SAFE_TRAVEL}
-    M5
-    G0X0Y0
-    M30
-    """
+    console.log suffix()
