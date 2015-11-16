@@ -62,7 +62,7 @@ Outline is cut last -- part needs to stay put!
       underlaymentGroove =step*(height+cutter)+underlayment+cutter/2
       console.log line underlaymentGroove, 0, underlaymentGroove, length+cutter, 0, -1*underlayment
 
-      console.log rectangle step*(height+cutter), 0, height+cutter, length+cutter, 0, -1*(thickness+overcut), 3, true
+      console.log rectangle step*(height+cutter), 0, height+cutter, length+cutter, 0, -1*(thickness+overcut), 3, 2*cutter
 
 
 Cut out the front/rear.
@@ -81,7 +81,7 @@ The front panel just has an underlayment groove.
       underlaymentCut = if step is 2 then -1*underlayment else -1*(thickness+overcut)
       console.log line underlaymentGroove, 0, underlaymentGroove, width+cutter, 0, underlaymentCut
 
-      console.log rectangle step*(height+cutter), 0, height+cutter, width+cutter, 0, -1*(thickness+overcut), 3, true
+      console.log rectangle step*(height+cutter), 0, height+cutter, width+cutter, 0, -1*(thickness+overcut), 3, 2*cutter
 
 
 
