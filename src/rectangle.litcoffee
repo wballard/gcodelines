@@ -18,7 +18,7 @@ Everyone's favorite shape! The rectangle, so much more than merely a square...
         z = s.z
         ret += "G1F3000X#{x}Y#{y}\n"
         ret += "G1F3000Z#{z}\n"
-        if tab and s.step is steps
+        if tab and s.step >= steps-1
           ret += "G1F3000X#{x+width/2-tab}Y#{y}Z#{z}\n"
           ret += "G0Z#{SAFE_TRAVEL}\n"
           ret += "G0X#{x+width/2+tab}Y#{y}\n"
@@ -27,7 +27,7 @@ Everyone's favorite shape! The rectangle, so much more than merely a square...
         else
           ret += "G1F3000X#{x+width}Y#{y}Z#{z}\n"
         ret += "G1F3000X#{x+width}Y#{y+height}Z#{z}\n"
-        if tab and s.step is steps
+        if tab and s.step >= steps-1
           ret += "G1F3000X#{x+width/2+tab}Y#{y+height}Z#{z}\n"
           ret += "G0Z#{SAFE_TRAVEL}\n"
           ret += "G0X#{x+width/2-tab}Y#{y+height}\n"

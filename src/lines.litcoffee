@@ -1,6 +1,6 @@
 Run the cutter this high during moves.
 
-    SAFE_TRAVEL = 20.0
+    SAFE_TRAVEL = 10.0
     intersect = require 'wgs84-intersect-util'
 
 
