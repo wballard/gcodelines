@@ -14,5 +14,9 @@
     "docopt": "^0.6.2",
     "lodash": "^3.10.1",
     "wgs84-intersect-util": "^1.0.4"
+  },
+  "bin": {
+    "drawerbottom": "./bin/drawerbottom",
+    "drawerbox": "./bin/drawerbox"
   }
 }
