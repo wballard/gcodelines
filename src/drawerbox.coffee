@@ -37,7 +37,7 @@ overcut = 1.1
 cutter = 6.35
 tab = cutter
 underlayment = cutter
-rabbet = thickness-underlayment
+rabbet = thickness-underlayment+overcut/2
 rabbetShelf = thickness-rabbet
 bottomWidth = width-(rabbetShelf)*2
 bottomLength = length-(rabbetShelf)*2
@@ -74,34 +74,25 @@ width tab.
   sideLength = switch side
     when 0, 1 then length
     when 2, 3 then width-(rabbetShelf*2)
+
   console.log line offset, cutter, offset+height+cutter, cutter, 0, -1*rabbet
-  console.log "G0X#{offset+height/2}Y#{cutter*2}"
-  console.log "G0Z0"
-  console.log "G02X#{offset+height/2+cutter/2}Z#{-1*rabbet}R#{rabbet}"
-  console.log "G02X#{offset+height/2+cutter}Z0R#{rabbet}"
 
   console.log line offset, sideLength, offset+height+cutter, sideLength, 0, -1*rabbet
-  console.log "G0X#{offset+height/2}Y#{sideLength-cutter}"
-  console.log "G0Z0"
-  console.log "G02X#{offset+height/2+cutter/2}Z#{-1*rabbet}R#{rabbet}"
-  console.log "G02X#{offset+height/2+cutter}Z0R#{rabbet}"
 
   console.log line offset+thickness, 0, offset+thickness, sideLength+cutter, 0, -1*(rabbet+overcut)
   console.log rectangle offset, 0, height+cutter, sideLength+cutter, 0, -1*(thickness+overcut), 3, tab
 
 ###
-Width sides have a modified rabbet with a small tab. These sides are shortened
+Width sides have a rabbet. These sides are shortened
 as the tab will go into the notch cut on the length sides.
 ###
 [2, 3].forEach (side) ->
   offset = bottomWidth+cutter + (height+cutter)*side
   sideLength = width-(rabbetShelf*2)
 
-  console.log line offset, cutter, offset+height/2-cutter/2, cutter, 0, -1*rabbet
-  console.log line offset+height/2+cutter*3/2, cutter, offset+height+cutter, cutter, 0, -1*rabbet
+  console.log line offset, cutter, offset+height+cutter, cutter, 0, -1*rabbet
 
-  console.log line offset, sideLength, offset+height/2-cutter/2, sideLength, 0, -1*rabbet
-  console.log line offset+height/2+cutter*3/2, sideLength, offset+height+cutter, sideLength, 0, -1*rabbet
+  console.log line offset, sideLength, offset+height+cutter, sideLength, 0, -1*rabbet
 
   console.log line offset+thickness, 0, offset+thickness, sideLength+cutter, 0, -1*(rabbet+overcut)
   console.log rectangle offset, 0, height+cutter, sideLength+cutter, 0, -1*(thickness+overcut), 3, tab

@@ -1,6 +1,6 @@
 ```
 Usage:
-  mazecarver <width-mm> <height-mm> <thickness-mm> <width-cells> <height-cells> [<mask>...]
+  mazecarver <width-mm> <height-mm> <depth-mm> <width-cells> <height-cells> [<mask>...]
 
 Options:
   -h --help                show this help message and exit
@@ -20,12 +20,12 @@ This will treat any cells that intersect with these coordinates as unreachable
 and will be held out of the maze generation. These are in cell coordinates,
 not in mm.
 
-This treats the tabletop as 0, makes it easier to cut through with sheets that
-will warp a bit.
+Material top is Z0.
+
 
 
 Usage:
-  panel <width-mm> <height-mm> <thickness-mm> <short-side-cells>
+  panel <width-mm> <height-mm> <thickness-mm> <width-cells>
 
 Options:
   -h --help                show this help message and exit
