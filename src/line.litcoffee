@@ -13,14 +13,14 @@ Cuts take the form:
       ret = """
       G0Z#{SAFE_TRAVEL}
       G0X#{x1}Y#{y1}
-      G0Z#{zstart}
+      G1F#{FEEDRATE}X#{x1}Y#{y1}
+      G1Z#{zstart}
 
       """
       (zstart + s*((zend-zstart)/steps) for s in [1..steps]).forEach (z) ->
         ret += """
-        G1F#{FEEDRATE}X#{x2}Y#{y2}Z#{z}
-        G1F#{FEEDRATE}X#{x1}Y#{y1}Z#{z}
+        G1X#{x2}Y#{y2}Z#{z}
+        G1X#{x1}Y#{y1}Z#{z}
 
         """
-      ret += "G1F#{FEEDRATE}X#{x2}Y#{y2}Z#{zend}\n"
-      ret += "G0Z#{SAFE_TRAVEL}\n"
+      ret += "G1X#{x2}Y#{y2}Z#{zend}\n"

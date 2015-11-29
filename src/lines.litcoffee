@@ -48,7 +48,9 @@ Standard program suffix, safe and shutdown.
       G0Z#{SAFE_TRAVEL}
       M5
       G0X0Y0
+
       M30
+
       """
 
 
@@ -71,5 +73,5 @@ Standard program prefix -- safe and power up.
       prefix: prefix
       SAFE_TRAVEL: SAFE_TRAVEL
       RPM: 18000
-      FEEDRATE: 5000
+      FEEDRATE: 4000
       PLUNGERATE: 1000

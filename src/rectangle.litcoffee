@@ -11,30 +11,31 @@ Everyone's favorite shape! The rectangle, so much more than merely a square...
       ret = """
       G0Z#{SAFE_TRAVEL}
       G0X#{x}Y#{y}
-      G0Z#{zstart}
+      G1F#{FEEDRATE}X#{x}Y#{y}
+      G1Z#{zstart}
 
       """
       ({z: zstart + s*((zend-zstart)/steps), step: s} for s in [1..steps]).forEach (s) ->
         z = s.z
-        ret += "G1F#{FEEDRATE}X#{x}Y#{y}\n"
-        ret += "G1F#{FEEDRATE}Z#{z}\n"
+        ret += "G1X#{x}Y#{y}\n"
+        ret += "G1Z#{z}\n"
         if tab and s.step >= steps-1
-          ret += "G1F#{FEEDRATE}X#{x+width/2-tab}Y#{y}Z#{z}\n"
+          ret += "G1X#{x+width/2-tab}\n"
           ret += "G0Z#{SAFE_TRAVEL}\n"
-          ret += "G0X#{x+width/2+tab}Y#{y}\n"
-          ret += "G1F#{FEEDRATE}Z#{z}\n"
-          ret += "G1F#{FEEDRATE}X#{x+width}Y#{y}Z#{z}\n"
+          ret += "G0X#{x+width/2+tab}\n"
+          ret += "G1Z#{z}\n"
+          ret += "G1X#{x+width}\n"
         else
-          ret += "G1F#{FEEDRATE}X#{x+width}Y#{y}Z#{z}\n"
-        ret += "G1F#{FEEDRATE}X#{x+width}Y#{y+height}Z#{z}\n"
+          ret += "G1X#{x+width}\n"
+        ret += "G1Y#{y+height}\n"
         if tab and s.step >= steps-1
-          ret += "G1F#{FEEDRATE}X#{x+width/2+tab}Y#{y+height}Z#{z}\n"
+          ret += "G1X#{x+width/2+tab}\n"
           ret += "G0Z#{SAFE_TRAVEL}\n"
-          ret += "G0X#{x+width/2-tab}Y#{y+height}\n"
-          ret += "G1F#{FEEDRATE}Z#{z}\n"
-          ret += "G1F#{FEEDRATE}X#{x}Y#{y+height}Z#{z}\n"
+          ret += "G0X#{x+width/2-tab}\n"
+          ret += "G1Z#{z}\n"
+          ret += "G1X#{x}\n"
         else
-          ret += "G1F#{FEEDRATE}X#{x}Y#{y+height}Z#{z}\n"
-        ret += "G1F#{FEEDRATE}X#{x}Y#{y}Z#{z}\n"
-
-      ret += "G0Z#{SAFE_TRAVEL}\n"
+          ret += "G1X#{x}\n"
+        ret += "Y#{y}\n"
+        
+      ret

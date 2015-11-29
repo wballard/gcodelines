@@ -33,11 +33,11 @@ width = Number(options['<width-mm>'])
 length = Number(options['<length-mm>'])
 height = Number(options['<height-mm>'])
 thickness = Number(options['<thickness-mm>'])
-overcut = 1.1
+overcut = 1.2
 cutter = 6.35
 tab = cutter
 underlayment = cutter
-rabbet = thickness-underlayment+overcut/2
+rabbet = thickness-underlayment
 rabbetShelf = thickness-rabbet
 bottomWidth = width-(rabbetShelf)*2
 bottomLength = length-(rabbetShelf)*2
@@ -75,9 +75,9 @@ width tab.
     when 0, 1 then length
     when 2, 3 then width-(rabbetShelf*2)
 
-  console.log line offset, cutter, offset+height+cutter, cutter, 0, -1*rabbet
+  console.log line offset, cutter, offset+height+cutter, cutter, 0, -1*(rabbet+overcut)
 
-  console.log line offset, sideLength, offset+height+cutter, sideLength, 0, -1*rabbet
+  console.log line offset, sideLength, offset+height+cutter, sideLength, 0, -1*(rabbet+overcut)
 
   console.log line offset+thickness, 0, offset+thickness, sideLength+cutter, 0, -1*(rabbet+overcut)
   console.log rectangle offset, 0, height+cutter, sideLength+cutter, 0, -1*(thickness+overcut), 3, tab
@@ -90,9 +90,9 @@ as the tab will go into the notch cut on the length sides.
   offset = bottomWidth+cutter + (height+cutter)*side
   sideLength = width-(rabbetShelf*2)
 
-  console.log line offset, cutter, offset+height+cutter, cutter, 0, -1*rabbet
+  console.log line offset, cutter, offset+height+cutter, cutter, 0, -1*(rabbet+overcut)
 
-  console.log line offset, sideLength, offset+height+cutter, sideLength, 0, -1*rabbet
+  console.log line offset, sideLength, offset+height+cutter, sideLength, 0, -1*(rabbet+overcut)
 
   console.log line offset+thickness, 0, offset+thickness, sideLength+cutter, 0, -1*(rabbet+overcut)
   console.log rectangle offset, 0, height+cutter, sideLength+cutter, 0, -1*(thickness+overcut), 3, tab

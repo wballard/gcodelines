@@ -1,0 +1,30 @@
+#!/usr/bin/env coffee
+doc = """
+Usage:
+  rectangle <width-mm> <length-mm> <thickness-mm>
+
+Options:
+  -h --help                show this help message and exit
+  --version                show version and exit
+
+Generates the gcode to create a rectangle using a 6.35mm cutter.
+
+"""
+
+{docopt} = require 'docopt'
+require 'colors'
+_ = require 'lodash'
+options = docopt doc
+{suffix, prefix, SAFE_TRAVEL, RPM, FEEDRATE, PLUNGERATE} = require '../src/lines.litcoffee'
+rectangle = require '../src/rectangle.litcoffee'
+
+width = Number(options['<width-mm>'])
+length = Number(options['<length-mm>'])
+thickness = Number(options['<thickness-mm>'])
+overcut = 1.2
+cutter = 6.35
+tab = cutter
+
+console.log prefix(cutter, RPM)
+console.log rectangle 0, 0, width+cutter, length+cutter, 0, -1*(thickness+overcut), 3, tab
+console.log suffix()
