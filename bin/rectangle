@@ -21,7 +21,7 @@ rectangle = require '../src/rectangle.litcoffee'
 width = Number(options['<width-mm>'])
 length = Number(options['<length-mm>'])
 thickness = Number(options['<thickness-mm>'])
-overcut = 1.2
+overcut = 1.0
 cutter = 6.35
 tab = cutter
 

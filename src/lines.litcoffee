@@ -73,5 +73,5 @@ Standard program prefix -- safe and power up.
       prefix: prefix
       SAFE_TRAVEL: SAFE_TRAVEL
       RPM: 18000
-      FEEDRATE: 4000
+      FEEDRATE: 3000
       PLUNGERATE: 1000
