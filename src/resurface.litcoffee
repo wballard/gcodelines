@@ -1,6 +1,6 @@
     doc = """
     Usage:
-      resurface <width-mm> <height-mm>
+      resurface <width-mm> <height-mm> <depth-mm>
 
     Options:
       -h --help                show this help message and exit
@@ -25,11 +25,12 @@
 
     width = Number(options['<width-mm>'])
     height = Number(options['<height-mm>'])
+    depth = Number(options['<depth-mm>'])
     cutterDiameter = 31.75
 
 Prefix. Set up the spindle.
 
-    console.log prefix()
+    console.log prefix cutterDiameter, FEEDRATE
 
 
 This is a simple matter of figuring the 'step' size based on the cutter width,
@@ -37,7 +38,7 @@ stepping up the height axis, with a 50% overlap.
 
     step = cutterDiameter / 2
     at = 0
-    console.log "G1F#{PLUNGERATE}Z0"
+    console.log "G1F#{PLUNGERATE}Z-#{depth}"
     while true
       console.log "G1F#{FEEDRATE}Y#{at}"
       console.log "G1F#{FEEDRATE}X#{width}"
