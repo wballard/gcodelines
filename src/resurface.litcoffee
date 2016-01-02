@@ -30,7 +30,7 @@
 
 Prefix. Set up the spindle.
 
-    console.log prefix cutterDiameter, FEEDRATE
+    console.log prefix cutterDiameter
 
 
 This is a simple matter of figuring the 'step' size based on the cutter width,
